@@ -1,4 +1,6 @@
 
+import { ImageMetadata } from '@/types/product';
+
 export async function extractImageMetadata(file: File): Promise<ImageMetadata> {
   // Create object URL for the image
   const url = URL.createObjectURL(file);
