@@ -14,22 +14,25 @@ interface SettingsFormValues {
   csvFormat: string;
 }
 
+const DEFAULT_TEMPLATE = 'Category: {category}\nTitle: {title}\nDimensions: {dimensions}\nMaterials: {materials}\nCondition: {condition}\n\nDescription:\n{description}';
+const DEFAULT_CSV_FORMAT = 'sku,product_title,seo_title,product_slug,meta_description,tags,price,category,full_description,image_filename_1,alt_text_1,image_filename_2,alt_text_2,shipping_notes';
+
 export default function Settings() {
   const { toast } = useToast();
   const form = useForm<SettingsFormValues>({
     defaultValues: {
-      defaultTemplate: localStorage.getItem('defaultTemplate') || '',
-      csvFormat: localStorage.getItem('csvFormat') || 'sku,title,seoTitle,slug,metaDescription,tags,price,category,description,images,altText,shippingNotes',
+      defaultTemplate: localStorage.getItem('default_template') || DEFAULT_TEMPLATE,
+      csvFormat: localStorage.getItem('csv_export_format') || DEFAULT_CSV_FORMAT,
     },
   });
 
   const onSubmit = (data: SettingsFormValues) => {
-    localStorage.setItem('defaultTemplate', data.defaultTemplate);
-    localStorage.setItem('csvFormat', data.csvFormat);
+    localStorage.setItem('default_template', data.defaultTemplate);
+    localStorage.setItem('csv_export_format', data.csvFormat);
 
     toast({
       title: "Settings saved",
-      description: "Your settings have been saved successfully.",
+      description: "Your settings have been saved successfully to browser storage.",
     });
   };
 
@@ -45,7 +48,7 @@ export default function Settings() {
           <CardHeader>
             <CardTitle>Description Templates</CardTitle>
             <CardDescription>
-              Set default templates for product descriptions by category
+              Configure your default product description template and CSV export format
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -60,7 +63,7 @@ export default function Settings() {
                       <FormControl>
                         <Textarea
                           placeholder="Enter your default product description template..."
-                          className="min-h-[150px]"
+                          className="min-h-[200px] font-mono text-sm"
                           {...field}
                         />
                       </FormControl>
@@ -78,7 +81,7 @@ export default function Settings() {
                     <FormItem>
                       <FormLabel>CSV Export Format</FormLabel>
                       <FormControl>
-                        <Input {...field} />
+                        <Input {...field} className="font-mono text-sm" />
                       </FormControl>
                       <FormDescription>
                         Comma-separated list of fields for WooCommerce CSV export

@@ -1,4 +1,6 @@
+
 import type { DescriptionPayload, SeoMetadata } from '@/types/product';
+import { generateSeoMetadata } from './seoGenerator';
 
 interface ProductDetails {
   category: string;
