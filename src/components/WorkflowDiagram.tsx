@@ -1,5 +1,5 @@
+
 import * as React from 'react';
-import { ArrowDown } from 'lucide-react';
 
 export default function WorkflowDiagram() {
   return (
@@ -60,6 +60,8 @@ const getStepBackground = (type: string): string => {
       return 'bg-white border-blue-300';
     case 'analytics':
       return 'bg-white border-blue-200';
+    case 'seo':
+      return 'bg-white border-blue-300';
     default:
       return 'bg-white border-slate-200';
   }
@@ -102,6 +104,18 @@ const steps = [
     type: "review"
   },
   {
+    title: "Auto-Generate SEO Fields",
+    description: "System generates SEO metadata for the product",
+    type: "seo",
+    subItems: [
+      "SEO Title",
+      "Meta Description",
+      "Product Slug",
+      "Tags",
+      "Image Alt Texts"
+    ]
+  },
+  {
     title: "Export Options",
     description: "User selects export format",
     type: "output",
@@ -113,17 +127,17 @@ const steps = [
   },
   {
     title: "WordPress API Upload",
-    description: "Direct integration with WordPress for product publishing",
+    description: "Direct integration with WordPress for product publishing (Future Phase)",
     type: "output"
   },
   {
-    title: "Analytics Data",
+    title: "Save Basic Analytics",
     description: "System records usage metrics",
     type: "analytics",
     subItems: [
-      "Number of Descriptions Generated",
-      "Time Saved",
-      "Most Edited Sections"
+      "Descriptions Generated",
+      "Editing Time",
+      "Export Success Tracking"
     ]
   }
 ];
