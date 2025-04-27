@@ -10,9 +10,9 @@ interface ToolbarProps {
   onClearAll: () => void;
 }
 
-const Toolbar: React.FC<ToolbarProps> = ({ onClearAll }) => {
+export default function Toolbar({ onClearAll }: ToolbarProps) {
   const { toast } = useToast();
-  const [isEditOpen, setIsEditOpen] = React.useState(false);
+  const [isEditOpen, React.useState(false)];
   const [description, setDescription] = React.useState('');
 
   const handleGenerateDescription = () => {
@@ -101,6 +101,4 @@ const Toolbar: React.FC<ToolbarProps> = ({ onClearAll }) => {
       </Dialog>
     </>
   );
-};
-
-export default Toolbar;
+}

@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import Toolbar from './Toolbar';
 
-const UploadZone: React.FC = () => {
+export default function UploadZone() {
   const [files, setFiles] = useState<File[]>([]);
   const [previews, setPreviews] = useState<string[]>([]);
 
@@ -92,6 +92,4 @@ const UploadZone: React.FC = () => {
       )}
     </div>
   );
-};
-
-export default UploadZone;
+}
