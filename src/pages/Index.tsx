@@ -1,8 +1,10 @@
+
 import * as React from 'react';
 import UploadZone from '@/components/UploadZone';
 import Toolbar from '@/components/Toolbar';
 import ReviewModal from '@/components/ReviewModal';
 import ComparisonView from '@/components/ComparisonView';
+import WorkflowDiagram from '@/components/WorkflowDiagram';
 import { generateDescription } from '@/services/descriptionGenerator';
 import type { ProductDescription } from '@/services/descriptionGenerator';
 
@@ -11,6 +13,7 @@ export default function Index() {
   const [isComparisonOpen, setIsComparisonOpen] = React.useState(false);
   const [description, setDescription] = React.useState<ProductDescription | null>(null);
   const [enhancedDescription, setEnhancedDescription] = React.useState<ProductDescription | null>(null);
+  const [showDiagram, setShowDiagram] = React.useState(true);
 
   const handleClearAll = () => {
     setDescription(null);
@@ -79,7 +82,21 @@ export default function Index() {
         />
       </div>
       
-      <UploadZone />
+      {showDiagram ? (
+        <div className="w-full max-w-4xl mx-auto mb-8">
+          <WorkflowDiagram />
+          <div className="text-center mt-8">
+            <button 
+              onClick={() => setShowDiagram(false)}
+              className="px-4 py-2 bg-blue-100 text-blue-800 rounded-lg hover:bg-blue-200 transition-colors"
+            >
+              Start Using Kollect-It
+            </button>
+          </div>
+        </div>
+      ) : (
+        <UploadZone />
+      )}
 
       {description && (
         <>
