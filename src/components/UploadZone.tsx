@@ -1,4 +1,3 @@
-
 import React, { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Upload, FileText, Edit, X, Download } from 'lucide-react';
@@ -71,9 +70,9 @@ const UploadZone = () => {
             <div className="flex gap-3 justify-start">
               <Button
                 variant="default"
-                className="bg-[#2563EB] hover:bg-[#1E40AF] transition-colors duration-300 shadow-md rounded-lg px-6 py-2 text-base font-semibold tracking-wide"
+                className="bg-[#2563EB] hover:bg-[#1E40AF] text-white font-semibold tracking-wide px-6 py-2 text-base transition-all duration-300 shadow-md rounded-lg flex items-center gap-2"
               >
-                <FileText className="w-5 h-5 mr-2" />
+                <FileText className="w-5 h-5" />
                 Generate Description
               </Button>
               <Button
