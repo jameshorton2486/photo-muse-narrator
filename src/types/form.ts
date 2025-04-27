@@ -17,3 +17,14 @@ export const productSchema = z.object({
 });
 
 export type ProductFormData = z.infer<typeof productSchema>;
+
+export type GeneratedDescription = {
+  title: string;
+  description: string[];
+  distinguishingCharacteristics: string[];
+  conditionReport: string;
+  provenanceHistory: string;
+  collectorValue: string;
+  additionalDetails: string;
+  shippingHandling: string;
+};

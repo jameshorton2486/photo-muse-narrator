@@ -1,13 +1,15 @@
-
 import * as React from 'react';
 import { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Upload } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import ProductDetailsForm from './ProductDetailsForm';
 import type { DescriptionPayload } from '@/types/product';
 
-export default function UploadZone() {
+interface UploadZoneProps {
+  onImagesUploaded: (images: File[]) => void;
+}
+
+export default function UploadZone({ onImagesUploaded }: UploadZoneProps) {
   const [files, setFiles] = useState<File[]>([]);
   const [previews, setPreviews] = useState<string[]>([]);
 
@@ -15,7 +17,8 @@ export default function UploadZone() {
     setFiles(prev => [...prev, ...acceptedFiles]);
     const newPreviews = acceptedFiles.map(file => URL.createObjectURL(file));
     setPreviews(prev => [...prev, ...newPreviews]);
-  }, []);
+    onImagesUploaded(acceptedFiles);
+  }, [onImagesUploaded]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,

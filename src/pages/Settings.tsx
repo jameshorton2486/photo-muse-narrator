@@ -78,7 +78,7 @@ export default function Settings() {
           <CardHeader>
             <CardTitle>Description Templates</CardTitle>
             <CardDescription>
-              Configure your default product description template and CSV export format
+              Your settings are automatically saved locally to your device
             </CardDescription>
           </CardHeader>
           <CardContent>
