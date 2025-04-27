@@ -74,7 +74,8 @@ export default function Index() {
       <div className="w-full max-w-4xl mx-auto mb-8">
         <Toolbar 
           onClearAll={handleClearAll}
-          onGenerateDescription={handleGenerateDescription} 
+          onGenerateDescription={handleGenerateDescription}
+          description={description}
         />
       </div>
       
