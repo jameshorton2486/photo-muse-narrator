@@ -1,7 +1,6 @@
-
 import React, { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { Upload } from 'lucide-react';
+import { Upload, FileText, Pencil, Trash2, X, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
@@ -11,7 +10,6 @@ const UploadZone = () => {
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     setFiles(prev => [...prev, ...acceptedFiles]);
-    // Create image previews
     const newPreviews = acceptedFiles.map(file => URL.createObjectURL(file));
     setPreviews(prev => [...prev, ...newPreviews]);
   }, []);
@@ -23,12 +21,28 @@ const UploadZone = () => {
     }
   });
 
-  // Cleanup previews when component unmounts
   React.useEffect(() => {
     return () => {
       previews.forEach(preview => URL.revokeObjectURL(preview));
     };
   }, [previews]);
+
+  const handleClearAll = () => {
+    setFiles([]);
+    setPreviews(prev => {
+      prev.forEach(preview => URL.revokeObjectURL(preview));
+      return [];
+    });
+  };
+
+  const handleDeletePhoto = (index: number) => {
+    setFiles(prev => prev.filter((_, i) => i !== index));
+    setPreviews(prev => {
+      const updatedPreviews = prev.filter((_, i) => i !== index);
+      URL.revokeObjectURL(prev[index]);
+      return updatedPreviews;
+    });
+  };
 
   return (
     <div className="w-full max-w-4xl mx-auto p-6 space-y-8">
@@ -61,6 +75,26 @@ const UploadZone = () => {
 
       {files.length > 0 && (
         <div className="space-y-4">
+          <div className="flex justify-end space-x-2">
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={handleClearAll}
+              className="text-slate-600"
+            >
+              <X className="w-4 h-4 mr-2" />
+              Clear All
+            </Button>
+            <Button
+              variant="secondary"
+              size="sm"
+              className="text-slate-600"
+            >
+              <Download className="w-4 h-4 mr-2" />
+              Export Data
+            </Button>
+          </div>
+
           <h2 className="text-xl font-semibold text-slate-800">Uploaded Photos</h2>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {files.map((file, index) => (
@@ -73,6 +107,31 @@ const UploadZone = () => {
                   />
                 </div>
                 <p className="mt-2 text-sm text-slate-600 truncate">{file.name}</p>
+                <div className="mt-2 flex gap-2">
+                  <Button 
+                    variant="default"
+                    size="sm"
+                    className="flex-1"
+                  >
+                    <FileText className="w-4 h-4 mr-2" />
+                    Generate
+                  </Button>
+                  <Button 
+                    variant="secondary"
+                    size="sm"
+                    className="flex-1"
+                  >
+                    <Pencil className="w-4 h-4 mr-2" />
+                    Edit
+                  </Button>
+                  <Button 
+                    variant="destructive"
+                    size="sm"
+                    onClick={() => handleDeletePhoto(index)}
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                </div>
               </div>
             ))}
           </div>
