@@ -6,11 +6,14 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
 const UploadZone = () => {
-  const [isDragging, setIsDragging] = useState(false);
+  const [files, setFiles] = useState<File[]>([]);
+  const [previews, setPreviews] = useState<string[]>([]);
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
-    console.log('Dropped files:', acceptedFiles);
-    // Handle the uploaded files here
+    setFiles(prev => [...prev, ...acceptedFiles]);
+    // Create image previews
+    const newPreviews = acceptedFiles.map(file => URL.createObjectURL(file));
+    setPreviews(prev => [...prev, ...newPreviews]);
   }, []);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -20,8 +23,15 @@ const UploadZone = () => {
     }
   });
 
+  // Cleanup previews when component unmounts
+  React.useEffect(() => {
+    return () => {
+      previews.forEach(preview => URL.revokeObjectURL(preview));
+    };
+  }, [previews]);
+
   return (
-    <div className="w-full max-w-2xl mx-auto p-6">
+    <div className="w-full max-w-4xl mx-auto p-6 space-y-8">
       <div
         {...getRootProps()}
         className={cn(
@@ -41,7 +51,6 @@ const UploadZone = () => {
           className="mt-4 bg-white hover:bg-slate-100"
           onClick={(e) => {
             e.stopPropagation();
-            // Fix: Properly cast the element to HTMLInputElement which has a click() method
             const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
             if (fileInput) fileInput.click();
           }}
@@ -49,6 +58,26 @@ const UploadZone = () => {
           Browse Files
         </Button>
       </div>
+
+      {files.length > 0 && (
+        <div className="space-y-4">
+          <h2 className="text-xl font-semibold text-slate-800">Uploaded Photos</h2>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {files.map((file, index) => (
+              <div key={file.name + index} className="group relative">
+                <div className="aspect-square rounded-lg overflow-hidden border border-slate-200 bg-slate-50">
+                  <img
+                    src={previews[index]}
+                    alt={file.name}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <p className="mt-2 text-sm text-slate-600 truncate">{file.name}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
