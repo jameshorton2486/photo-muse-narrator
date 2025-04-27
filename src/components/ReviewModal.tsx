@@ -84,7 +84,7 @@ export default function ReviewModal({
       <AccordionContent>
         <Textarea
           value={content.join('\n')}
-          onChange={(e) => handleInputChange(field, e.target.value.split('\n'))}
+          onChange={(e) => handleInputChange(field, e.target.value.split('\n').filter(Boolean))}
           className="min-h-[150px] mt-2"
         />
         {renderCharacterCount(content.join('\n'))}

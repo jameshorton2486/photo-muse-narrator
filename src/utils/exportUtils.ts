@@ -1,5 +1,4 @@
-
-import type { ProductDescription, SeoMetadata } from '@/types/product';
+import type { ProductDescription, SeoMetadata, WooCommerceCSVFields } from '@/types/product';
 
 export interface ExportData {
   productDescription: ProductDescription;
@@ -12,65 +11,55 @@ export function generateCSVContent(data: ExportData): string {
   const headers = [
     'SKU',
     'Name',
-    'SEO title',
+    'SEO Title',
     'Slug',
-    'Meta description',
+    'Meta Description',
     'Tags',
-    'Regular price',
+    'Regular Price',
     'Categories',
     'Description',
     'Images',
-    'Alt text',
-    'Shipping class'
+    'Alt Text',
+    'Shipping Notes'
   ];
   
-  // Format tags and categories properly
-  const tags = data.seoMetadata.tags.join('|');
-  const imageNames = data.images.join('|');
-  const altTexts = Object.values(data.seoMetadata.imageAltTexts).join('|');
+  // Format data according to WooCommerce fields
+  const wooCommerceData: WooCommerceCSVFields = {
+    sku: data.productDescription.details.itemNumber,
+    name: data.productDescription.title,
+    seoTitle: data.seoMetadata.seoTitle,
+    slug: data.seoMetadata.slug,
+    metaDescription: data.seoMetadata.metaDescription,
+    tags: data.seoMetadata.tags.join(', '),
+    regularPrice: data.productDescription.details.price,
+    categories: data.productDescription.details.category,
+    description: [
+      ...data.productDescription.description,
+      '\n<h3>Distinguishing Characteristics</h3>',
+      '<ul>',
+      ...data.productDescription.distinguishingCharacteristics.map(char => `<li>${char}</li>`),
+      '</ul>',
+      '\n<h3>Condition Report</h3>',
+      `<p>${data.productDescription.conditionReport}</p>`,
+      '\n<h3>Provenance/History</h3>',
+      `<p>${data.productDescription.provenanceHistory}</p>`,
+      '\n<h3>Collector Value</h3>',
+      `<p>${data.productDescription.collectorValue}</p>`,
+      '\n<h3>Additional Details</h3>',
+      `<p>${data.productDescription.additionalDetails}</p>`
+    ].join('\n'),
+    images: data.images.join('|'),
+    altText: Object.values(data.seoMetadata.imageAltTexts).join('|'),
+    shippingNotes: data.productDescription.shippingHandling
+  };
   
-  // Construct the full description with all sections
-  const fullDescription = [
-    ...data.productDescription.description,
-    '\n<h3>Distinguishing Characteristics</h3>',
-    '<ul>',
-    ...data.productDescription.distinguishingCharacteristics.map(char => `<li>${char}</li>`),
-    '</ul>',
-    '\n<h3>Condition Report</h3>',
-    `<p>${data.productDescription.conditionReport}</p>`,
-    '\n<h3>Provenance/History</h3>',
-    `<p>${data.productDescription.provenanceHistory}</p>`,
-    '\n<h3>Collector Value</h3>',
-    `<p>${data.productDescription.collectorValue}</p>`,
-    '\n<h3>Additional Details</h3>',
-    `<p>${data.productDescription.additionalDetails}</p>`
-  ].join('\n');
-  
-  // Create the row with all product data
-  const row = [
-    data.productDescription.details.itemNumber,
-    data.productDescription.title,
-    data.seoMetadata.seoTitle,
-    data.seoMetadata.slug,
-    data.seoMetadata.metaDescription,
-    tags,
-    data.productDescription.details.price,
-    data.productDescription.details.category,
-    fullDescription,
-    imageNames,
-    altTexts,
-    data.productDescription.shippingHandling
-  ];
-  
-  // Format the CSV with properly escaped fields
-  const escapedRow = row.map(cell => {
-    // Handle null/undefined values
-    if (cell === null || cell === undefined) return '""';
-    // Convert to string and properly escape quotes
-    return `"${String(cell).replace(/"/g, '""')}"`;
+  // Convert the data to a CSV row
+  const row = Object.values(wooCommerceData).map(value => {
+    if (value === null || value === undefined) return '""';
+    return `"${String(value).replace(/"/g, '""')}"`;
   });
   
-  return headers.join(',') + '\n' + escapedRow.join(',');
+  return headers.join(',') + '\n' + row.join(',');
 }
 
 export function generateHTMLContent(data: ProductDescription): string {

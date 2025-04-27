@@ -1,4 +1,3 @@
-
 export interface ProductDimensions {
   height: string;
   width: string;
@@ -57,4 +56,19 @@ export interface ProductDescription {
   collectorValue: string;
   additionalDetails: string;
   shippingHandling: string;
+}
+
+export interface WooCommerceCSVFields {
+  sku: string;
+  name: string;
+  seoTitle: string;
+  slug: string;
+  metaDescription: string;
+  tags: string;
+  regularPrice: string;
+  categories: string;
+  description: string;
+  images: string;
+  altText: string;
+  shippingNotes: string;
 }
