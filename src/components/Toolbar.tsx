@@ -1,4 +1,3 @@
-
 import * as React from 'react';
 import { FileText, Edit, X, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -8,20 +7,13 @@ import { useToast } from '@/hooks/use-toast';
 
 interface ToolbarProps {
   onClearAll: () => void;
+  onGenerateDescription: () => void;
 }
 
-export default function Toolbar({ onClearAll }: ToolbarProps) {
+export default function Toolbar({ onClearAll, onGenerateDescription }: ToolbarProps) {
   const { toast } = useToast();
   const [isEditOpen, setIsEditOpen] = React.useState(false);
   const [description, setDescription] = React.useState('');
-
-  const handleGenerateDescription = () => {
-    toast({
-      title: "Success",
-      description: "Description generated!",
-      duration: 3000,
-    });
-  };
 
   const handleExportData = () => {
     const csvContent = "Filename,Description\nimage1.jpg,Sample description\nimage2.jpg,Another description";
@@ -48,7 +40,7 @@ export default function Toolbar({ onClearAll }: ToolbarProps) {
         <div className="flex gap-3 justify-start">
           <Button
             variant="default"
-            onClick={handleGenerateDescription}
+            onClick={onGenerateDescription}
             className="bg-[#2563EB] hover:bg-[#1E40AF] text-white font-semibold tracking-wide px-6 py-2 text-base transition-all duration-300 shadow-md rounded-lg flex items-center gap-2"
           >
             <FileText className="w-5 h-5" />
