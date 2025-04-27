@@ -1,6 +1,7 @@
+
 import React, { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { Upload, FileText, Pencil, Trash2, X, Download } from 'lucide-react';
+import { Upload, FileText, Pencil, X, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
@@ -35,15 +36,6 @@ const UploadZone = () => {
     });
   };
 
-  const handleDeletePhoto = (index: number) => {
-    setFiles(prev => prev.filter((_, i) => i !== index));
-    setPreviews(prev => {
-      const updatedPreviews = prev.filter((_, i) => i !== index);
-      URL.revokeObjectURL(prev[index]);
-      return updatedPreviews;
-    });
-  };
-
   return (
     <div className="w-full max-w-4xl mx-auto p-6 space-y-8">
       <div
@@ -75,31 +67,46 @@ const UploadZone = () => {
 
       {files.length > 0 && (
         <div className="space-y-4">
-          <div className="flex justify-end space-x-2">
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={handleClearAll}
-              className="text-slate-600"
-            >
-              <X className="w-4 h-4 mr-2" />
-              Clear All
-            </Button>
-            <Button
-              variant="secondary"
-              size="sm"
-              className="text-slate-600"
-            >
-              <Download className="w-4 h-4 mr-2" />
-              Export Data
-            </Button>
+          <div className="sticky top-0 bg-white/80 backdrop-blur-sm py-4 border-b z-10">
+            <div className="flex flex-wrap gap-2 justify-start">
+              <Button
+                variant="default"
+                size="default"
+                className="bg-blue-600 hover:bg-blue-700"
+              >
+                <FileText className="w-4 h-4 mr-2" />
+                Generate Description
+              </Button>
+              <Button
+                variant="secondary"
+                size="default"
+              >
+                <Pencil className="w-4 h-4 mr-2" />
+                Edit Description
+              </Button>
+              <Button
+                variant="secondary"
+                size="default"
+                onClick={handleClearAll}
+              >
+                <X className="w-4 h-4 mr-2" />
+                Clear All
+              </Button>
+              <Button
+                variant="secondary"
+                size="default"
+              >
+                <Download className="w-4 h-4 mr-2" />
+                Export Data
+              </Button>
+            </div>
           </div>
 
           <h2 className="text-xl font-semibold text-slate-800">Uploaded Photos</h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
             {files.map((file, index) => (
-              <div key={file.name + index} className="group relative">
-                <div className="aspect-square rounded-lg overflow-hidden border border-slate-200 bg-slate-50">
+              <div key={file.name + index} className="group">
+                <div className="aspect-square rounded-lg overflow-hidden border border-slate-200 bg-slate-50 shadow-sm">
                   <img
                     src={previews[index]}
                     alt={file.name}
@@ -107,31 +114,6 @@ const UploadZone = () => {
                   />
                 </div>
                 <p className="mt-2 text-sm text-slate-600 truncate">{file.name}</p>
-                <div className="mt-2 flex gap-2">
-                  <Button 
-                    variant="default"
-                    size="sm"
-                    className="flex-1"
-                  >
-                    <FileText className="w-4 h-4 mr-2" />
-                    Generate
-                  </Button>
-                  <Button 
-                    variant="secondary"
-                    size="sm"
-                    className="flex-1"
-                  >
-                    <Pencil className="w-4 h-4 mr-2" />
-                    Edit
-                  </Button>
-                  <Button 
-                    variant="destructive"
-                    size="sm"
-                    onClick={() => handleDeletePhoto(index)}
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </Button>
-                </div>
               </div>
             ))}
           </div>
