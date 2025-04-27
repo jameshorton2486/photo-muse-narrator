@@ -41,7 +41,9 @@ const UploadZone = () => {
           className="mt-4 bg-white hover:bg-slate-100"
           onClick={(e) => {
             e.stopPropagation();
-            document.querySelector('input[type="file"]')?.click();
+            // Fix: Properly cast the element to HTMLInputElement which has a click() method
+            const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+            if (fileInput) fileInput.click();
           }}
         >
           Browse Files
