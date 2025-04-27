@@ -1,222 +1,77 @@
-
-import * as React from 'react';
-import { ChevronDown, ChevronUp, Edit } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import * as React from "react";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
-} from '@/components/ui/dialog';
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from '@/components/ui/accordion';
-import { Separator } from '@/components/ui/separator';
-import { Textarea } from '@/components/ui/textarea';
-import { useToast } from '@/hooks/use-toast';
-import type { ProductDescription } from '@/services/descriptionGenerator';
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useToast } from "@/hooks/use-toast";
+import type { ProductDescription } from "@/services/descriptionGenerator";
+import { generateHTMLContent, generatePlainTextContent } from "@/utils/exportUtils";
 
 interface ReviewModalProps {
-  description: ProductDescription;
-  isOpen: boolean;
+  open: boolean;
   onOpenChange: (open: boolean) => void;
-  onAccept: () => void;
-  onStartOver: () => void;
+  description: ProductDescription | null;
 }
 
-export default function ReviewModal({
-  description,
-  isOpen,
-  onOpenChange,
-  onAccept,
-  onStartOver,
-}: ReviewModalProps) {
+export function ReviewModal({ open, onOpenChange, description }: ReviewModalProps) {
   const { toast } = useToast();
-  const [editedDescription, setEditedDescription] = React.useState<ProductDescription>(description);
+  const [activeFormat, setActiveFormat] = React.useState("html");
+  
+  if (!description) {
+    return null;
+  }
 
-  const handleInputChange = (
-    section: keyof ProductDescription,
-    value: string | string[] | Record<string, string>
-  ) => {
-    setEditedDescription((prev) => ({
-      ...prev,
-      [section]: value,
-    }));
+  const formattedContent = activeFormat === "html" 
+    ? generateHTMLContent(description)
+    : generatePlainTextContent(description);
+
+  const copyToClipboard = async () => {
+    try {
+      await navigator.clipboard.writeText(formattedContent);
+      toast({
+        title: "Copied!",
+        description: "Content copied to clipboard",
+      });
+    } catch (err) {
+      toast({
+        title: "Error",
+        description: "Failed to copy content",
+        variant: "destructive",
+      });
+    }
   };
-
-  const handleAccept = () => {
-    toast({
-      title: "Changes saved",
-      description: "Your edits have been applied successfully.",
-    });
-    onAccept();
-  };
-
-  const handleStartOver = () => {
-    toast({
-      title: "Starting over",
-      description: "All changes have been discarded.",
-    });
-    onStartOver();
-  };
-
-  const renderCharacterCount = (text: string) => {
-    return (
-      <div className="text-xs text-gray-500 mt-1">
-        {text.length} characters
-      </div>
-    );
-  };
-
-  const renderArraySection = (
-    title: string,
-    content: string[],
-    field: keyof ProductDescription
-  ) => (
-    <AccordionItem value={title.toLowerCase()}>
-      <AccordionTrigger className="text-lg font-semibold">
-        {title}
-      </AccordionTrigger>
-      <AccordionContent>
-        <Textarea
-          value={content.join('\n')}
-          onChange={(e) => handleInputChange(field, e.target.value.split('\n').filter(Boolean))}
-          className="min-h-[150px] mt-2"
-        />
-        {renderCharacterCount(content.join('\n'))}
-      </AccordionContent>
-    </AccordionItem>
-  );
-
-  const renderTextSection = (
-    title: string,
-    content: string,
-    field: keyof ProductDescription
-  ) => (
-    <AccordionItem value={title.toLowerCase()}>
-      <AccordionTrigger className="text-lg font-semibold">
-        {title}
-      </AccordionTrigger>
-      <AccordionContent>
-        <Textarea
-          value={content}
-          onChange={(e) => handleInputChange(field, e.target.value)}
-          className="min-h-[150px] mt-2"
-        />
-        {renderCharacterCount(content)}
-      </AccordionContent>
-    </AccordionItem>
-  );
 
   return (
-    <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl h-[80vh] flex flex-col">
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle className="text-2xl">Review Description</DialogTitle>
+          <DialogTitle>Review Description</DialogTitle>
+          <DialogDescription>
+            Here's the generated description. Review and copy as needed.
+          </DialogDescription>
         </DialogHeader>
-        
-        <div className="flex-1 overflow-y-auto pr-2">
-          <Accordion type="single" collapsible className="space-y-4">
-            <AccordionItem value="details">
-              <AccordionTrigger className="text-lg font-semibold">
-                Product Details
-              </AccordionTrigger>
-              <AccordionContent>
-                <div className="grid gap-4 mt-2">
-                  {Object.entries(editedDescription.details).map(([key, value]) => (
-                    <div key={key}>
-                      <label className="block text-sm font-medium mb-1 capitalize">
-                        {key.replace(/([A-Z])/g, ' $1').trim()}
-                      </label>
-                      <Textarea
-                        value={value}
-                        onChange={(e) =>
-                          handleInputChange('details', {
-                            ...editedDescription.details,
-                            [key]: e.target.value,
-                          })
-                        }
-                        className="h-[60px]"
-                      />
-                      {renderCharacterCount(value)}
-                    </div>
-                  ))}
-                </div>
-              </AccordionContent>
-            </AccordionItem>
-
-            {renderArraySection(
-              'Description',
-              editedDescription.description,
-              'description'
-            )}
-
-            {renderArraySection(
-              'Distinguishing Characteristics',
-              editedDescription.distinguishingCharacteristics,
-              'distinguishingCharacteristics'
-            )}
-
-            {renderTextSection(
-              'Condition Report',
-              editedDescription.conditionReport,
-              'conditionReport'
-            )}
-
-            {renderTextSection(
-              'Provenance History',
-              editedDescription.provenanceHistory,
-              'provenanceHistory'
-            )}
-
-            {renderTextSection(
-              'Collector Value',
-              editedDescription.collectorValue,
-              'collectorValue'
-            )}
-
-            {renderTextSection(
-              'Additional Details',
-              editedDescription.additionalDetails,
-              'additionalDetails'
-            )}
-
-            {renderTextSection(
-              'Shipping & Handling',
-              editedDescription.shippingHandling,
-              'shippingHandling'
-            )}
-          </Accordion>
-        </div>
-
-        <Separator className="my-4" />
-        
-        <DialogFooter className="flex justify-between sm:justify-between">
-          <Button
-            variant="destructive"
-            onClick={handleStartOver}
-            className="gap-2"
-          >
-            Start Over
-          </Button>
-          <div className="flex gap-2">
-            <Button
-              variant="outline"
-              className="gap-2"
-              onClick={() => onOpenChange(false)}
-            >
-              <Edit className="w-4 h-4" />
-              Continue Editing
-            </Button>
-            <Button onClick={handleAccept} className="gap-2">
-              Accept and Continue
-            </Button>
-          </div>
-        </DialogFooter>
+        <Tabs defaultValue="html" className="space-y-4">
+          <TabsList>
+            <TabsTrigger value="html" onClick={() => setActiveFormat("html")}>HTML</TabsTrigger>
+            <TabsTrigger value="plaintext" onClick={() => setActiveFormat("plaintext")}>Plain Text</TabsTrigger>
+          </TabsList>
+          <TabsContent value="html">
+            <div className="rounded-md border p-4 bg-muted text-foreground">
+              <div dangerouslySetInnerHTML={{ __html: formattedContent }} />
+            </div>
+          </TabsContent>
+          <TabsContent value="plaintext">
+            <div className="rounded-md border p-4 bg-muted text-foreground whitespace-pre-line">
+              {formattedContent}
+            </div>
+          </TabsContent>
+        </Tabs>
+        <Button onClick={copyToClipboard}>Copy to Clipboard</Button>
       </DialogContent>
     </Dialog>
   );

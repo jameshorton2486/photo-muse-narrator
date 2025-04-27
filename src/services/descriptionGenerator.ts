@@ -1,4 +1,3 @@
-
 import type { DescriptionPayload, ProductDescription, SeoMetadata } from '@/types/product';
 import { generateSeoMetadata } from './seoGenerator';
 
@@ -81,6 +80,18 @@ async function callClaudeAPI(prompt: string, apiKey: string): Promise<any> {
 
   const data = await response.json();
   return JSON.parse(data.content[0].text);
+}
+
+export interface ProductDescription {
+  title: string;
+  details: ProductDetails;
+  description: string[];
+  distinguishingCharacteristics: string[];
+  conditionReport: string;
+  provenanceHistory: string;
+  collectorValue: string;
+  additionalDetails: string;
+  shippingHandling: string;
 }
 
 export interface GeneratedContent {

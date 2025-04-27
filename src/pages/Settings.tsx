@@ -4,34 +4,35 @@ import { Settings as SettingsIcon } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { useForm } from "react-hook-form";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 
 interface SettingsFormValues {
   defaultTemplate: string;
   csvFormat: string;
-  notificationEmail: string;
 }
 
 export default function Settings() {
   const { toast } = useToast();
   const form = useForm<SettingsFormValues>({
     defaultValues: {
-      defaultTemplate: '',
-      csvFormat: 'title,description,price,sku,category',
-      notificationEmail: '',
+      defaultTemplate: localStorage.getItem('defaultTemplate') || '',
+      csvFormat: localStorage.getItem('csvFormat') || 'title,description,price,sku,category',
     },
   });
 
   const onSubmit = (data: SettingsFormValues) => {
+    // Save settings to localStorage
+    localStorage.setItem('defaultTemplate', data.defaultTemplate);
+    localStorage.setItem('csvFormat', data.csvFormat);
+
     toast({
       title: "Settings saved",
-      description: "Your settings have been saved successfully.",
+      description: "Your settings have been saved to browser storage.",
     });
-    console.log(data);
+    console.log('Settings saved:', data);
   };
 
   return (
@@ -42,12 +43,6 @@ export default function Settings() {
       </div>
 
       <div className="grid gap-6">
-        <Alert>
-          <AlertDescription>
-            To securely store API keys and enable email notifications, please connect your project to Supabase using the green Supabase button in the top right corner.
-          </AlertDescription>
-        </Alert>
-
         <Card>
           <CardHeader>
             <CardTitle>Description Templates</CardTitle>
@@ -89,26 +84,6 @@ export default function Settings() {
                       </FormControl>
                       <FormDescription>
                         Comma-separated list of fields for CSV export
-                      </FormDescription>
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="notificationEmail"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Notification Email</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="email"
-                          placeholder="your@email.com"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormDescription>
-                        Receive notifications when exports are complete
                       </FormDescription>
                     </FormItem>
                   )}
