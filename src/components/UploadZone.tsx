@@ -3,9 +3,8 @@ import * as React from 'react';
 import { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Upload } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import Toolbar from './Toolbar';
+import ProductDetailsForm from './ProductDetailsForm';
 
 export default function UploadZone() {
   const [files, setFiles] = useState<File[]>([]);
@@ -30,54 +29,31 @@ export default function UploadZone() {
     };
   }, [previews]);
 
-  const handleClearAll = () => {
-    setFiles([]);
-    setPreviews(prev => {
-      prev.forEach(preview => URL.revokeObjectURL(preview));
-      return [];
-    });
-  };
-
   return (
-    <div className="w-full max-w-4xl mx-auto space-y-8">
-      {files.length > 0 && <Toolbar onClearAll={handleClearAll} />}
-      
-      <div className="p-6">
-        <div
-          {...getRootProps()}
-          className={cn(
-            "relative w-full h-64 border-2 border-dashed rounded-xl transition-all duration-300 flex flex-col items-center justify-center",
-            "hover:border-slate-400 hover:bg-slate-50",
-            isDragActive ? "border-blue-400 bg-blue-50" : "border-slate-200",
-            "cursor-pointer"
-          )}
-        >
-          <input {...getInputProps()} />
-          <Upload className="w-12 h-12 text-slate-400 mb-4" />
-          <p className="text-lg text-slate-600 mb-2">
-            Drop your images here or browse to upload
-          </p>
-          <Button
-            variant="secondary"
-            className="mt-4 bg-white hover:bg-slate-100"
-            onClick={(e) => {
-              e.stopPropagation();
-              const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
-              if (fileInput) fileInput.click();
-            }}
-          >
-            Browse Files
-          </Button>
-        </div>
+    <div className="w-full max-w-4xl mx-auto space-y-8 bg-white p-8 rounded-xl shadow-sm">
+      <div
+        {...getRootProps()}
+        className={cn(
+          "relative w-full h-64 border-2 border-dashed rounded-xl transition-all duration-300 flex flex-col items-center justify-center",
+          "hover:border-slate-400 hover:bg-slate-50",
+          isDragActive ? "border-blue-400 bg-blue-50" : "border-slate-200",
+          "cursor-pointer mb-8"
+        )}
+      >
+        <input {...getInputProps()} />
+        <Upload className="w-12 h-12 text-slate-400 mb-4" />
+        <p className="text-lg text-slate-600 mb-2">
+          Drop your images here or browse to upload
+        </p>
       </div>
 
       {files.length > 0 && (
-        <div className="space-y-4 p-6">
+        <div className="space-y-4">
           <h2 className="text-xl font-semibold text-slate-800">Uploaded Photos</h2>
           <div className="grid grid-cols-3 gap-6">
             {files.map((file, index) => (
               <div key={file.name + index} className="group">
-                <div className="aspect-square rounded-lg overflow-hidden border border-slate-200 bg-slate-50 shadow-sm">
+                <div className="aspect-square rounded-lg overflow-hidden border border-slate-200 bg-slate-50">
                   <img
                     src={previews[index]}
                     alt={file.name}
@@ -90,6 +66,10 @@ export default function UploadZone() {
           </div>
         </div>
       )}
+
+      <div className="pt-8 border-t">
+        <ProductDetailsForm />
+      </div>
     </div>
   );
 }
