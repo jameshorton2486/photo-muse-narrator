@@ -68,7 +68,7 @@ const UploadZone = () => {
       {files.length > 0 && (
         <div className="space-y-4">
           <div className="sticky top-0 bg-white/80 backdrop-blur-sm py-4 border-b z-10 shadow-sm">
-            <div className="flex flex-wrap gap-3 justify-start">
+            <div className="flex gap-3 justify-start">
               <Button
                 variant="default"
                 className="bg-[#2563EB] hover:bg-[#1E40AF] transition-colors duration-300 shadow-md rounded-lg px-6 py-2 text-base font-semibold tracking-wide"
@@ -102,7 +102,7 @@ const UploadZone = () => {
           </div>
 
           <h2 className="text-xl font-semibold text-slate-800">Uploaded Photos</h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-3 gap-6">
             {files.map((file, index) => (
               <div key={file.name + index} className="group">
                 <div className="aspect-square rounded-lg overflow-hidden border border-slate-200 bg-slate-50 shadow-sm">
