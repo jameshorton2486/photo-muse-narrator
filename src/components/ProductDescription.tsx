@@ -1,6 +1,6 @@
 
 import * as React from 'react';
-import type { ProductDescription } from '@/services/descriptionGenerator';
+import type { ProductDescription } from '@/types/product';
 
 interface ProductDescriptionProps {
   description: ProductDescription;

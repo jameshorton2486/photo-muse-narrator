@@ -1,3 +1,4 @@
+
 import type { DescriptionPayload, ProductDescription, SeoMetadata } from '@/types/product';
 import { generateSeoMetadata } from './seoGenerator';
 

@@ -1,6 +1,5 @@
 
-import type { ProductDescription } from '@/types/product';
-import type { SeoMetadata } from '@/types/product';
+import type { ProductDescription, SeoMetadata } from '@/types/product';
 
 export interface ExportData {
   productDescription: ProductDescription;
@@ -9,52 +8,69 @@ export interface ExportData {
 }
 
 export function generateCSVContent(data: ExportData): string {
+  // Define headers using WooCommerce compatible field names
   const headers = [
-    'Image Name',
     'SKU',
-    'Product Title',
-    'SEO Title',
-    'Product Slug',
-    'Meta Description',
+    'Name',
+    'SEO title',
+    'Slug',
+    'Meta description',
     'Tags',
-    'Regular Price',
+    'Regular price',
     'Categories',
     'Description',
-    'Image Alt Text',
-    'Shipping Information'
+    'Images',
+    'Alt text',
+    'Shipping class'
   ];
   
-  const mainRow = [
-    data.images.join('|'),
+  // Format tags and categories properly
+  const tags = data.seoMetadata.tags.join('|');
+  const imageNames = data.images.join('|');
+  const altTexts = Object.values(data.seoMetadata.imageAltTexts).join('|');
+  
+  // Construct the full description with all sections
+  const fullDescription = [
+    ...data.productDescription.description,
+    '\n<h3>Distinguishing Characteristics</h3>',
+    '<ul>',
+    ...data.productDescription.distinguishingCharacteristics.map(char => `<li>${char}</li>`),
+    '</ul>',
+    '\n<h3>Condition Report</h3>',
+    `<p>${data.productDescription.conditionReport}</p>`,
+    '\n<h3>Provenance/History</h3>',
+    `<p>${data.productDescription.provenanceHistory}</p>`,
+    '\n<h3>Collector Value</h3>',
+    `<p>${data.productDescription.collectorValue}</p>`,
+    '\n<h3>Additional Details</h3>',
+    `<p>${data.productDescription.additionalDetails}</p>`
+  ].join('\n');
+  
+  // Create the row with all product data
+  const row = [
     data.productDescription.details.itemNumber,
     data.productDescription.title,
     data.seoMetadata.seoTitle,
     data.seoMetadata.slug,
     data.seoMetadata.metaDescription,
-    data.seoMetadata.tags.join('|'),
+    tags,
     data.productDescription.details.price,
     data.productDescription.details.category,
-    [
-      ...data.productDescription.description,
-      '\nDistinguishing Characteristics:',
-      ...data.productDescription.distinguishingCharacteristics.map(char => `- ${char}`),
-      '\nCondition Report:',
-      data.productDescription.conditionReport,
-      '\nProvenance/History:',
-      data.productDescription.provenanceHistory,
-      '\nCollector Value:',
-      data.productDescription.collectorValue,
-      '\nAdditional Details:',
-      data.productDescription.additionalDetails
-    ].join('\n'),
-    Object.values(data.seoMetadata.imageAltTexts).join('|'),
+    fullDescription,
+    imageNames,
+    altTexts,
     data.productDescription.shippingHandling
   ];
-
-  return [
-    headers.join(','),
-    mainRow.map(cell => `"${cell.replace(/"/g, '""')}"`).join(',')
-  ].join('\n');
+  
+  // Format the CSV with properly escaped fields
+  const escapedRow = row.map(cell => {
+    // Handle null/undefined values
+    if (cell === null || cell === undefined) return '""';
+    // Convert to string and properly escape quotes
+    return `"${String(cell).replace(/"/g, '""')}"`;
+  });
+  
+  return headers.join(',') + '\n' + escapedRow.join(',');
 }
 
 export function generateHTMLContent(data: ProductDescription): string {
@@ -67,7 +83,7 @@ export function generateHTMLContent(data: ProductDescription): string {
       <p><strong>Dimensions:</strong> ${data.details.dimensions}</p>
       <p><strong>Condition:</strong> ${data.details.condition}</p>
       <p><strong>Item Number:</strong> ${data.details.itemNumber}</p>
-      <p><strong>Price:</strong> ${data.details.price}</p>
+      <p><strong>Price:</strong> $${data.details.price}</p>
     </div>
     
     <div class="description">
@@ -85,8 +101,14 @@ export function generateHTMLContent(data: ProductDescription): string {
     <h2>Provenance/History</h2>
     <p>${data.provenanceHistory}</p>
     
+    <h2>Collector Value</h2>
+    <p>${data.collectorValue}</p>
+    
     <h2>Additional Details</h2>
     <p>${data.additionalDetails}</p>
+    
+    <h2>Shipping & Handling</h2>
+    <p>${data.shippingHandling}</p>
   `;
 }
 
@@ -101,7 +123,7 @@ Materials: ${data.details.materials}
 Dimensions: ${data.details.dimensions}
 Condition: ${data.details.condition}
 Item Number: ${data.details.itemNumber}
-Price: ${data.details.price}
+Price: $${data.details.price}
 
 DESCRIPTION
 ${data.description.join('\n\n')}
@@ -115,8 +137,13 @@ ${data.conditionReport}
 PROVENANCE/HISTORY
 ${data.provenanceHistory}
 
+COLLECTOR VALUE
+${data.collectorValue}
+
 ADDITIONAL DETAILS
 ${data.additionalDetails}
+
+SHIPPING & HANDLING
+${data.shippingHandling}
   `.trim();
 }
-

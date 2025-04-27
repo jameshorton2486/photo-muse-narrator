@@ -7,15 +7,21 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import ExportOptions from '@/components/ExportOptions';
-import type { ProductDescription } from '@/services/descriptionGenerator';
+import type { ProductDescription, SeoMetadata } from '@/types/product';
 
 interface ToolbarProps {
   onClearAll: () => void;
   onGenerateDescription: () => void;
   description: ProductDescription | null;
+  seoMetadata?: SeoMetadata | null;
 }
 
-export default function Toolbar({ onClearAll, onGenerateDescription, description }: ToolbarProps) {
+export default function Toolbar({ 
+  onClearAll, 
+  onGenerateDescription, 
+  description,
+  seoMetadata = null
+}: ToolbarProps) {
   const { toast } = useToast();
   const [isEditOpen, setIsEditOpen] = React.useState(false);
   const [editText, setEditText] = React.useState('');
@@ -36,6 +42,7 @@ export default function Toolbar({ onClearAll, onGenerateDescription, description
             variant="secondary"
             onClick={() => setIsEditOpen(true)}
             className="bg-[#E5E7EB] text-[#374151] hover:bg-[#D1D5DB] transition-colors duration-300 shadow-sm rounded-lg px-5 py-2 text-sm font-medium flex items-center gap-2"
+            disabled={!description}
           >
             <Edit className="w-4 h-4" />
             Edit Description
@@ -48,7 +55,9 @@ export default function Toolbar({ onClearAll, onGenerateDescription, description
             <X className="w-4 h-4" />
             Clear All
           </Button>
-          <ExportOptions description={description} />
+        </div>
+        <div className="flex flex-col space-y-2">
+          <ExportOptions productDescription={description} seoMetadata={seoMetadata} />
         </div>
         <div className="flex gap-3">
           <Button

@@ -58,4 +58,3 @@ export interface ProductDescription {
   additionalDetails: string;
   shippingHandling: string;
 }
-
