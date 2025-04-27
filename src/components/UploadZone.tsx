@@ -1,11 +1,13 @@
-import React, { useCallback, useState } from 'react';
+
+import * as React from 'react';
+import { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Upload } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import Toolbar from './Toolbar';
 
-const UploadZone = () => {
+const UploadZone: React.FC = () => {
   const [files, setFiles] = useState<File[]>([]);
   const [previews, setPreviews] = useState<string[]>([]);
 
