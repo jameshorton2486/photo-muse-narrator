@@ -9,6 +9,7 @@ import { ExportData } from '@/utils/exportUtils';
 import { generateCSVContent } from '@/utils/exportUtils';
 import { useToast } from "@/hooks/use-toast";
 import { Copy, Download } from 'lucide-react';
+import { Toaster } from "@/components/ui/sonner";
 
 export default function Index() {
   const [images, setImages] = React.useState<any[]>([]);
@@ -112,12 +113,12 @@ export default function Index() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="shadow-md rounded-md border p-4">
           <h2 className="text-xl font-semibold mb-4">1. Upload Images</h2>
-          <UploadZone onImagesUploaded={handleImagesUploaded} />
+          <UploadZone />
         </div>
 
         <div className="shadow-md rounded-md border p-4">
           <h2 className="text-xl font-semibold mb-4">2. Enter Product Details</h2>
-          <ProductDetailsForm onSubmit={handleFormSubmit} />
+          <ProductDetailsForm />
         </div>
       </div>
 

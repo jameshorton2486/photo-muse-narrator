@@ -1,6 +1,6 @@
 
 import * as React from 'react';
-import { Settings as SettingsIcon } from 'lucide-react';
+import { Settings as SettingsIcon, RotateCcw } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel } from "@/components/ui/form";
@@ -9,30 +9,60 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { useForm } from "react-hook-form";
 
+const STORAGE_KEY = 'kollectit-settings';
+const DEFAULT_TEMPLATE = 'Category: {category}\nTitle: {title}\nDimensions: {dimensions}\nMaterials: {materials}\nCondition: {condition}\n\nDescription:\n{description}';
+const DEFAULT_CSV_FORMAT = 'sku,product_title,seo_title,product_slug,meta_description,tags,price,category,full_description,image_filename_1,alt_text_1,image_filename_2,alt_text_2,shipping_notes';
+
 interface SettingsFormValues {
   defaultTemplate: string;
   csvFormat: string;
 }
 
-const DEFAULT_TEMPLATE = 'Category: {category}\nTitle: {title}\nDimensions: {dimensions}\nMaterials: {materials}\nCondition: {condition}\n\nDescription:\n{description}';
-const DEFAULT_CSV_FORMAT = 'sku,product_title,seo_title,product_slug,meta_description,tags,price,category,full_description,image_filename_1,alt_text_1,image_filename_2,alt_text_2,shipping_notes';
-
 export default function Settings() {
   const { toast } = useToast();
+  
+  // Load settings from localStorage or use defaults
+  const loadSavedSettings = (): SettingsFormValues => {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      return {
+        defaultTemplate: parsed.default_template || DEFAULT_TEMPLATE,
+        csvFormat: parsed.csv_export_format || DEFAULT_CSV_FORMAT,
+      };
+    }
+    return {
+      defaultTemplate: DEFAULT_TEMPLATE,
+      csvFormat: DEFAULT_CSV_FORMAT,
+    };
+  };
+
   const form = useForm<SettingsFormValues>({
-    defaultValues: {
-      defaultTemplate: localStorage.getItem('default_template') || DEFAULT_TEMPLATE,
-      csvFormat: localStorage.getItem('csv_export_format') || DEFAULT_CSV_FORMAT,
-    },
+    defaultValues: loadSavedSettings(),
   });
 
   const onSubmit = (data: SettingsFormValues) => {
-    localStorage.setItem('default_template', data.defaultTemplate);
-    localStorage.setItem('csv_export_format', data.csvFormat);
-
+    const settings = {
+      default_template: data.defaultTemplate,
+      csv_export_format: data.csvFormat,
+    };
+    
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
     toast({
       title: "Settings saved",
-      description: "Your settings have been saved successfully to browser storage.",
+      description: "Your settings have been saved successfully.",
+    });
+  };
+
+  const handleReset = () => {
+    form.reset({
+      defaultTemplate: DEFAULT_TEMPLATE,
+      csvFormat: DEFAULT_CSV_FORMAT,
+    });
+    localStorage.removeItem(STORAGE_KEY);
+    toast({
+      title: "Settings reset",
+      description: "Your settings have been reset to default values.",
     });
   };
 
@@ -90,7 +120,17 @@ export default function Settings() {
                   )}
                 />
 
-                <Button type="submit">Save Settings</Button>
+                <div className="flex gap-4">
+                  <Button type="submit">Save Settings</Button>
+                  <Button 
+                    type="button" 
+                    variant="outline" 
+                    onClick={handleReset}
+                  >
+                    <RotateCcw className="w-4 h-4 mr-2" />
+                    Reset to Default
+                  </Button>
+                </div>
               </form>
             </Form>
           </CardContent>
