@@ -1,10 +1,10 @@
-
 import * as React from 'react';
 import { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Upload } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import ProductDetailsForm from './ProductDetailsForm';
+import type { DescriptionPayload } from '@/types/product';
 
 export default function UploadZone() {
   const [files, setFiles] = useState<File[]>([]);
@@ -22,6 +22,11 @@ export default function UploadZone() {
       'image/*': ['.jpg', '.jpeg', '.png']
     }
   });
+
+  const handleGenerateDescription = (payload: DescriptionPayload) => {
+    console.log('Generated payload:', payload);
+    // This will be connected to the AI processing step in the next phase
+  };
 
   React.useEffect(() => {
     return () => {
@@ -68,7 +73,10 @@ export default function UploadZone() {
       )}
 
       <div className="pt-8 border-t">
-        <ProductDetailsForm />
+        <ProductDetailsForm 
+          images={files}
+          onGenerateDescription={handleGenerateDescription}
+        />
       </div>
     </div>
   );
