@@ -1,4 +1,3 @@
-
 import React, { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Upload, FileText, Edit, X, Download } from 'lucide-react';
@@ -86,16 +85,16 @@ const UploadZone = () => {
               <Button
                 variant="secondary"
                 onClick={handleClearAll}
-                className="bg-[#E5E7EB] text-[#374151] hover:bg-[#D1D5DB] transition-colors duration-300 shadow-sm rounded-lg px-5 py-2 text-sm font-medium"
+                className="bg-[#E5E7EB] text-[#374151] hover:bg-[#D1D5DB] transition-colors duration-300 shadow-sm rounded-lg px-5 py-2 text-sm font-medium flex items-center gap-2"
               >
-                <X className="w-4 h-4 mr-2" />
+                <X className="w-4 h-4" />
                 Clear All
               </Button>
               <Button
                 variant="secondary"
-                className="bg-[#E5E7EB] text-gray-800 hover:bg-[#D1D5DB] transition-colors duration-300 shadow-sm rounded-lg px-6 py-2 text-base"
+                className="bg-[#E5E7EB] text-[#374151] hover:bg-[#D1D5DB] transition-colors duration-300 shadow-sm rounded-lg px-5 py-2 text-sm font-medium flex items-center gap-2"
               >
-                <Download className="w-4 h-4 mr-2" />
+                <Download className="w-4 h-4" />
                 Export Data
               </Button>
             </div>
