@@ -101,9 +101,13 @@ export default function ProductDetailsForm({ images, onGenerateDescription }: Pr
             name="title"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Product Title</FormLabel>
+                <FormLabel className="text-slate-700">Product Title</FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter product title" {...field} />
+                  <Input 
+                    placeholder="Enter product title" 
+                    className="border-slate-200 focus-visible:ring-blue-500"
+                    {...field} 
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -115,10 +119,13 @@ export default function ProductDetailsForm({ images, onGenerateDescription }: Pr
             name="category"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Category</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormLabel className="text-slate-700">Category</FormLabel>
+                <Select 
+                  onValueChange={field.onChange} 
+                  defaultValue={field.value}
+                >
                   <FormControl>
-                    <SelectTrigger>
+                    <SelectTrigger className="border-slate-200 focus-visible:ring-blue-500">
                       <SelectValue placeholder="Select a category" />
                     </SelectTrigger>
                   </FormControl>
@@ -134,33 +141,20 @@ export default function ProductDetailsForm({ images, onGenerateDescription }: Pr
             )}
           />
 
-          <FormField
-            control={form.control}
-            name="details"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Additional Details</FormLabel>
-                <FormControl>
-                  <Textarea
-                    placeholder="Enter condition, history, and other notes"
-                    className="h-32"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
           <div className="grid grid-cols-3 gap-4">
             <FormField
               control={form.control}
               name="dimensions.height"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Height (in)</FormLabel>
+                  <FormLabel className="text-slate-700">Height (in)</FormLabel>
                   <FormControl>
-                    <Input type="number" step="0.1" {...field} />
+                    <Input 
+                      type="number" 
+                      step="0.1" 
+                      className="border-slate-200 focus-visible:ring-blue-500"
+                      {...field} 
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -171,9 +165,14 @@ export default function ProductDetailsForm({ images, onGenerateDescription }: Pr
               name="dimensions.width"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Width (in)</FormLabel>
+                  <FormLabel className="text-slate-700">Width (in)</FormLabel>
                   <FormControl>
-                    <Input type="number" step="0.1" {...field} />
+                    <Input 
+                      type="number" 
+                      step="0.1" 
+                      className="border-slate-200 focus-visible:ring-blue-500"
+                      {...field} 
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -184,9 +183,14 @@ export default function ProductDetailsForm({ images, onGenerateDescription }: Pr
               name="dimensions.depth"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Depth (in)</FormLabel>
+                  <FormLabel className="text-slate-700">Depth (in)</FormLabel>
                   <FormControl>
-                    <Input type="number" step="0.1" {...field} />
+                    <Input 
+                      type="number" 
+                      step="0.1" 
+                      className="border-slate-200 focus-visible:ring-blue-500"
+                      {...field} 
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -194,68 +198,66 @@ export default function ProductDetailsForm({ images, onGenerateDescription }: Pr
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <FormField
-              control={form.control}
-              name="materials"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Materials</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Enter materials" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="era"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Age/Era</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Enter age or era" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
+          <FormField
+            control={form.control}
+            name="materials"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-slate-700">Materials</FormLabel>
+                <FormControl>
+                  <Input 
+                    placeholder="Enter materials" 
+                    className="border-slate-200 focus-visible:ring-blue-500"
+                    {...field} 
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-          <div className="grid grid-cols-2 gap-4">
-            <FormField
-              control={form.control}
-              name="price"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Price</FormLabel>
-                  <FormControl>
-                    <Input type="number" step="0.01" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="itemNumber"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Item Number</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Enter inventory code" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
+          <FormField
+            control={form.control}
+            name="price"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-slate-700">Price</FormLabel>
+                <FormControl>
+                  <Input 
+                    type="number" 
+                    step="0.01" 
+                    className="border-slate-200 focus-visible:ring-blue-500"
+                    {...field} 
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="details"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-slate-700">Additional Notes</FormLabel>
+                <FormControl>
+                  <Textarea
+                    placeholder="Enter condition, history, and other details"
+                    className="min-h-[100px] border-slate-200 focus-visible:ring-blue-500"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
           <Button 
             type="submit" 
-            className="w-full" 
-            disabled={isLoading}
+            className="w-full bg-blue-500 hover:bg-blue-600 text-white" 
+            size="lg"
+            disabled={isLoading || images.length === 0}
           >
             {isLoading ? (
               <>
