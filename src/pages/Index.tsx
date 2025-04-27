@@ -1,3 +1,4 @@
+
 import * as React from 'react';
 import type { SeoMetadata, ProductDescription } from '@/types/product';
 import UploadZone from '@/components/UploadZone';
@@ -113,12 +114,15 @@ export default function Index() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="shadow-md rounded-md border p-4">
           <h2 className="text-xl font-semibold mb-4">1. Upload Images</h2>
-          <UploadZone />
+          <UploadZone onImagesUploaded={handleImagesUploaded} />
         </div>
 
         <div className="shadow-md rounded-md border p-4">
           <h2 className="text-xl font-semibold mb-4">2. Enter Product Details</h2>
-          <ProductDetailsForm />
+          <ProductDetailsForm 
+            images={images} 
+            onGenerateDescription={handleFormSubmit}
+          />
         </div>
       </div>
 
