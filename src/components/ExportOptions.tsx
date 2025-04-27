@@ -1,110 +1,58 @@
-
 import * as React from 'react';
-import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Download, FileText, Html, Csv } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
-import type { ProductDescription, SeoMetadata } from '@/types/product';
+import { FileText, Download } from 'lucide-react';
+import { Button } from './ui/button';
+import type { ProductDescription } from '@/types/product';
 import { generateCSVContent, generateHTMLContent, generatePlainTextContent } from '@/utils/exportUtils';
 
 interface ExportOptionsProps {
-  description: ProductDescription | null;
-  seoMetadata?: SeoMetadata;
-  images?: string[];
+  productDescription: ProductDescription;
+  seoMetadata: any;
+  images: string[];
 }
 
-export default function ExportOptions({ description, seoMetadata, images = [] }: ExportOptionsProps) {
-  const { toast } = useToast();
+const ExportOptions: React.FC<ExportOptionsProps> = ({ productDescription, seoMetadata, images }) => {
+  const downloadFile = (content: string, filename: string, contentType: string) => {
+    const a = document.createElement('a');
+    const file = new Blob([content], { type: contentType });
+    a.href = URL.createObjectURL(file);
+    a.download = filename;
+    a.click();
+  };
 
-  const handleExport = (format: 'csv' | 'html' | 'text') => {
-    if (!description) return;
+  const handleExportCSV = () => {
+    const csvContent = generateCSVContent({ productDescription, seoMetadata, images });
+    downloadFile(csvContent, 'product_description.csv', 'text/csv');
+  };
 
-    try {
-      let content: string;
-      let filename: string;
-      let type: string;
+  const handleExportHTML = () => {
+    const htmlContent = generateHTMLContent(productDescription);
+    downloadFile(htmlContent, 'product_description.html', 'text/html');
+  };
 
-      switch (format) {
-        case 'csv':
-          if (!seoMetadata) {
-            throw new Error('SEO metadata is required for CSV export');
-          }
-          content = generateCSVContent({
-            productDescription: description,
-            seoMetadata,
-            images
-          });
-          filename = 'product-description.csv';
-          type = 'text/csv';
-          break;
-        case 'html':
-          content = generateHTMLContent(description);
-          filename = 'product-description.html';
-          type = 'text/html';
-          break;
-        case 'text':
-          content = generatePlainTextContent(description);
-          filename = 'product-description.txt';
-          type = 'text/plain';
-          break;
-        default:
-          return;
-      }
-
-      const blob = new Blob([content], { type });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = filename;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
-
-      toast({
-        title: "Export Successful",
-        description: `Description exported as ${format.toUpperCase()}`,
-      });
-    } catch (error) {
-      toast({
-        title: "Export Failed",
-        description: error instanceof Error ? error.message : "There was an error exporting the description",
-        variant: "destructive",
-      });
-    }
+  const handleExportPlainText = () => {
+    const plainTextContent = generatePlainTextContent(productDescription);
+    downloadFile(plainTextContent, 'product_description.txt', 'text/plain');
   };
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          variant="secondary"
-          disabled={!description}
-          className="bg-[#E5E7EB] text-[#374151] hover:bg-[#D1D5DB] transition-colors duration-300 shadow-sm rounded-lg px-5 py-2 text-sm font-medium flex items-center gap-2"
-        >
-          <Download className="w-4 h-4" />
-          Export
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent>
-        <DropdownMenuItem onClick={() => handleExport('csv')} className="flex items-center gap-2">
-          <Csv className="w-4 h-4" />
-          Export as CSV
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => handleExport('html')} className="flex items-center gap-2">
-          <Html className="w-4 h-4" />
-          Export as HTML
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => handleExport('text')} className="flex items-center gap-2">
-          <FileText className="w-4 h-4" />
-          Export as Text
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <div className="flex flex-col space-y-4">
+      <Button variant="secondary" className="flex items-center space-x-2" onClick={handleExportCSV}>
+        <FileText className="h-4 w-4" />
+        <span>Export as CSV</span>
+        <Download className="h-4 w-4" />
+      </Button>
+      <Button variant="secondary" className="flex items-center space-x-2" onClick={handleExportHTML}>
+        <FileText className="h-4 w-4" />
+        <span>Export as HTML</span>
+        <Download className="h-4 w-4" />
+      </Button>
+      <Button variant="secondary" className="flex items-center space-x-2" onClick={handleExportPlainText}>
+        <FileText className="h-4 w-4" />
+        <span>Export as Plain Text</span>
+        <Download className="h-4 w-4" />
+      </Button>
+    </div>
   );
-}
+};
+
+export default ExportOptions;
