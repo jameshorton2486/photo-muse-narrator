@@ -1,31 +1,59 @@
 
-import { ProductDescription } from '@/services/descriptionGenerator';
+import type { ProductDescription } from '@/types/product';
+import type { SeoMetadata } from '@/types/product';
 
 export interface ExportData {
-  title: string;
-  category: string;
-  description: string;
-  price: string;
-  itemNumber: string;
+  productDescription: ProductDescription;
+  seoMetadata: SeoMetadata;
   images: string[];
 }
 
 export function generateCSVContent(data: ExportData): string {
-  const headers = ['Image Filename', 'Product Title', 'Description', 'Price', 'SKU', 'Category'];
-  const imageFiles = data.images.length ? data.images : [''];
+  const headers = [
+    'Image Name',
+    'SKU',
+    'Product Title',
+    'SEO Title',
+    'Product Slug',
+    'Meta Description',
+    'Tags',
+    'Regular Price',
+    'Categories',
+    'Description',
+    'Image Alt Text',
+    'Shipping Information'
+  ];
   
-  const rows = imageFiles.map(image => [
-    image,
-    data.title,
-    data.description,
-    data.price,
-    data.itemNumber,
-    data.category
-  ]);
+  const mainRow = [
+    data.images.join('|'),
+    data.productDescription.details.itemNumber,
+    data.productDescription.title,
+    data.seoMetadata.seoTitle,
+    data.seoMetadata.slug,
+    data.seoMetadata.metaDescription,
+    data.seoMetadata.tags.join('|'),
+    data.productDescription.details.price,
+    data.productDescription.details.category,
+    [
+      ...data.productDescription.description,
+      '\nDistinguishing Characteristics:',
+      ...data.productDescription.distinguishingCharacteristics.map(char => `- ${char}`),
+      '\nCondition Report:',
+      data.productDescription.conditionReport,
+      '\nProvenance/History:',
+      data.productDescription.provenanceHistory,
+      '\nCollector Value:',
+      data.productDescription.collectorValue,
+      '\nAdditional Details:',
+      data.productDescription.additionalDetails
+    ].join('\n'),
+    Object.values(data.seoMetadata.imageAltTexts).join('|'),
+    data.productDescription.shippingHandling
+  ];
 
   return [
     headers.join(','),
-    ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
+    mainRow.map(cell => `"${cell.replace(/"/g, '""')}"`).join(',')
   ].join('\n');
 }
 

@@ -7,16 +7,18 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Download } from 'lucide-react';
+import { Download, FileText, Html, Csv } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import type { ProductDescription } from '@/services/descriptionGenerator';
+import type { ProductDescription, SeoMetadata } from '@/types/product';
 import { generateCSVContent, generateHTMLContent, generatePlainTextContent } from '@/utils/exportUtils';
 
 interface ExportOptionsProps {
   description: ProductDescription | null;
+  seoMetadata?: SeoMetadata;
+  images?: string[];
 }
 
-export default function ExportOptions({ description }: ExportOptionsProps) {
+export default function ExportOptions({ description, seoMetadata, images = [] }: ExportOptionsProps) {
   const { toast } = useToast();
 
   const handleExport = (format: 'csv' | 'html' | 'text') => {
@@ -29,13 +31,13 @@ export default function ExportOptions({ description }: ExportOptionsProps) {
 
       switch (format) {
         case 'csv':
+          if (!seoMetadata) {
+            throw new Error('SEO metadata is required for CSV export');
+          }
           content = generateCSVContent({
-            title: description.title,
-            category: description.details.category,
-            description: description.description.join('\n'),
-            price: description.details.price,
-            itemNumber: description.details.itemNumber,
-            images: []
+            productDescription: description,
+            seoMetadata,
+            images
           });
           filename = 'product-description.csv';
           type = 'text/csv';
@@ -71,7 +73,7 @@ export default function ExportOptions({ description }: ExportOptionsProps) {
     } catch (error) {
       toast({
         title: "Export Failed",
-        description: "There was an error exporting the description",
+        description: error instanceof Error ? error.message : "There was an error exporting the description",
         variant: "destructive",
       });
     }
@@ -90,13 +92,16 @@ export default function ExportOptions({ description }: ExportOptionsProps) {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuItem onClick={() => handleExport('csv')}>
+        <DropdownMenuItem onClick={() => handleExport('csv')} className="flex items-center gap-2">
+          <Csv className="w-4 h-4" />
           Export as CSV
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => handleExport('html')}>
+        <DropdownMenuItem onClick={() => handleExport('html')} className="flex items-center gap-2">
+          <Html className="w-4 h-4" />
           Export as HTML
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => handleExport('text')}>
+        <DropdownMenuItem onClick={() => handleExport('text')} className="flex items-center gap-2">
+          <FileText className="w-4 h-4" />
           Export as Text
         </DropdownMenuItem>
       </DropdownMenuContent>

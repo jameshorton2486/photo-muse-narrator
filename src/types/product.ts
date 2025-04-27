@@ -1,3 +1,4 @@
+
 export interface ProductDimensions {
   height: string;
   width: string;
@@ -34,3 +35,27 @@ export interface SeoMetadata {
   tags: string[];
   imageAltTexts: { [imageUrl: string]: string };
 }
+
+export interface ProductDetails {
+  category: string;
+  originPeriod: string;
+  age: string;
+  materials: string;
+  dimensions: string;
+  condition: string;
+  itemNumber: string;
+  price: string;
+}
+
+export interface ProductDescription {
+  title: string;
+  details: ProductDetails;
+  description: string[];
+  distinguishingCharacteristics: string[];
+  conditionReport: string;
+  provenanceHistory: string;
+  collectorValue: string;
+  additionalDetails: string;
+  shippingHandling: string;
+}
+
