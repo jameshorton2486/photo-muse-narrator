@@ -260,25 +260,19 @@ export default function ProductDetailsForm({ images, onGenerateDescription }: Pr
             )}
           />
 
-          <FormField
-            control={form.control}
-            name="apiKey"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-slate-700">Claude API Key</FormLabel>
-                <FormControl>
-                  <Input
-                    type="password"
-                    placeholder="Enter your Claude API key"
-                    className="border-slate-200 focus-visible:ring-blue-500"
-                    value={apiKey}
-                    onChange={(e) => setApiKey(e.target.value)}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <div className="space-y-2">
+            <label htmlFor="apiKey" className="text-sm font-medium text-gray-700">
+              Claude API Key
+            </label>
+            <Input
+              id="apiKey"
+              type="password"
+              placeholder="Enter your Claude API key"
+              className="border-slate-200 focus-visible:ring-blue-500"
+              value={apiKey}
+              onChange={(e) => setApiKey(e.target.value)}
+            />
+          </div>
 
           <Button 
             type="submit" 
