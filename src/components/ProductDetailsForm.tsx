@@ -37,7 +37,9 @@ interface ProductDetailsFormProps {
 export default function ProductDetailsForm({ images, onGenerateDescription }: ProductDetailsFormProps) {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = React.useState(false);
+  const [apiKey, setApiKey] = React.useState('');
   const [generatedDescription, setGeneratedDescription] = React.useState(null);
+  
   const form = useForm<ProductFormData>({
     resolver: zodResolver(productSchema),
     defaultValues: {
@@ -57,24 +59,29 @@ export default function ProductDetailsForm({ images, onGenerateDescription }: Pr
   });
 
   const onSubmit = async (formData: ProductFormData) => {
+    if (!apiKey) {
+      toast({
+        title: "API Key Required",
+        description: "Please enter your Claude API key to generate descriptions.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     try {
       setIsLoading(true);
       
-      // Process all images and extract metadata
       const imageMetadataPromises = images.map(file => extractImageMetadata(file));
       const processedImages = await Promise.all(imageMetadataPromises);
 
-      // Prepare the payload
       const payload: DescriptionPayload = {
         formData,
         images: processedImages
       };
 
-      // Send the payload up to the parent component
       onGenerateDescription(payload);
       
-      // Generate the AI description
-      const description = await generateDescription(payload);
+      const description = await generateDescription(payload, apiKey);
       setGeneratedDescription(description);
       
       toast({
@@ -84,7 +91,7 @@ export default function ProductDetailsForm({ images, onGenerateDescription }: Pr
     } catch (error) {
       toast({
         title: "Error generating description",
-        description: "There was an error processing your data. Please try again.",
+        description: "There was an error connecting to Claude AI. Please check your API key and try again.",
         variant: "destructive",
       });
     } finally {
@@ -246,6 +253,26 @@ export default function ProductDetailsForm({ images, onGenerateDescription }: Pr
                     placeholder="Enter condition, history, and other details"
                     className="min-h-[100px] border-slate-200 focus-visible:ring-blue-500"
                     {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="apiKey"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-slate-700">Claude API Key</FormLabel>
+                <FormControl>
+                  <Input
+                    type="password"
+                    placeholder="Enter your Claude API key"
+                    className="border-slate-200 focus-visible:ring-blue-500"
+                    value={apiKey}
+                    onChange={(e) => setApiKey(e.target.value)}
                   />
                 </FormControl>
                 <FormMessage />
