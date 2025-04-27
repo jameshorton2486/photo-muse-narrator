@@ -1,18 +1,22 @@
-
 import * as React from 'react';
 import UploadZone from '@/components/UploadZone';
 import Toolbar from '@/components/Toolbar';
 import ReviewModal from '@/components/ReviewModal';
+import ComparisonView from '@/components/ComparisonView';
 import { generateDescription } from '@/services/descriptionGenerator';
 import type { ProductDescription } from '@/services/descriptionGenerator';
 
 export default function Index() {
   const [isReviewOpen, setIsReviewOpen] = React.useState(false);
+  const [isComparisonOpen, setIsComparisonOpen] = React.useState(false);
   const [description, setDescription] = React.useState<ProductDescription | null>(null);
+  const [enhancedDescription, setEnhancedDescription] = React.useState<ProductDescription | null>(null);
 
   const handleClearAll = () => {
     setDescription(null);
+    setEnhancedDescription(null);
     setIsReviewOpen(false);
+    setIsComparisonOpen(false);
   };
 
   const handleGenerateDescription = async () => {
@@ -40,6 +44,27 @@ export default function Index() {
     setIsReviewOpen(true);
   };
 
+  const handleEnhanceDescription = async () => {
+    // For now, we'll use a mock enhanced version
+    // This will be replaced with actual ChatGPT integration
+    setIsReviewOpen(false);
+    setIsComparisonOpen(true);
+    
+    // Simulate API call delay
+    setTimeout(() => {
+      if (description) {
+        setEnhancedDescription({
+          ...description,
+          description: [
+            ...description.description,
+            "Enhanced with more collector-specific details and SEO-optimized content.",
+          ],
+          additionalDetails: description.additionalDetails + "\n\nEnhanced with premium market insights.",
+        });
+      }
+    }, 1500);
+  };
+
   return (
     <div className="min-h-screen bg-[#F8FAFC] flex flex-col items-center p-8 font-sans min-w-[1200px]">
       <h1 className="text-3xl font-medium text-slate-800 mb-12">
@@ -56,16 +81,26 @@ export default function Index() {
       <UploadZone />
 
       {description && (
-        <ReviewModal
-          description={description}
-          isOpen={isReviewOpen}
-          onOpenChange={setIsReviewOpen}
-          onAccept={() => {
-            // Handle accepting the description
-            setIsReviewOpen(false);
-          }}
-          onStartOver={handleClearAll}
-        />
+        <>
+          <ReviewModal
+            description={description}
+            isOpen={isReviewOpen}
+            onOpenChange={setIsReviewOpen}
+            onAccept={handleEnhanceDescription}
+            onStartOver={handleClearAll}
+          />
+
+          <ComparisonView
+            originalDescription={description}
+            enhancedDescription={enhancedDescription}
+            isOpen={isComparisonOpen}
+            onOpenChange={setIsComparisonOpen}
+            onAccept={() => {
+              setDescription(enhancedDescription);
+              setIsComparisonOpen(false);
+            }}
+          />
+        </>
       )}
     </div>
   );
