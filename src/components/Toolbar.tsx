@@ -12,7 +12,7 @@ interface ToolbarProps {
 
 export default function Toolbar({ onClearAll }: ToolbarProps) {
   const { toast } = useToast();
-  const [isEditOpen, React.useState(false)];
+  const [isEditOpen, setIsEditOpen] = React.useState(false);
   const [description, setDescription] = React.useState('');
 
   const handleGenerateDescription = () => {
