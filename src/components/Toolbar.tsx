@@ -1,7 +1,8 @@
 
 import * as React from 'react';
-import { FileText, Edit, X } from 'lucide-react';
+import { FileText, Edit, X, Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
@@ -21,32 +22,44 @@ export default function Toolbar({ onClearAll, onGenerateDescription, description
 
   return (
     <div className="sticky top-0 bg-white/80 backdrop-blur-sm py-4 border-b z-10 shadow-sm mb-8">
-      <div className="flex gap-3 justify-start">
+      <div className="flex gap-3 justify-between">
+        <div className="flex gap-3">
+          <Button
+            variant="default"
+            onClick={onGenerateDescription}
+            className="bg-[#2563EB] hover:bg-[#1E40AF] text-white font-semibold tracking-wide px-6 py-2 text-base transition-all duration-300 shadow-md rounded-lg flex items-center gap-2"
+          >
+            <FileText className="w-5 h-5" />
+            Generate Description
+          </Button>
+          <Button
+            variant="secondary"
+            onClick={() => setIsEditOpen(true)}
+            className="bg-[#E5E7EB] text-[#374151] hover:bg-[#D1D5DB] transition-colors duration-300 shadow-sm rounded-lg px-5 py-2 text-sm font-medium flex items-center gap-2"
+          >
+            <Edit className="w-4 h-4" />
+            Edit Description
+          </Button>
+          <Button
+            variant="secondary"
+            onClick={onClearAll}
+            className="bg-[#E5E7EB] text-[#374151] hover:bg-[#D1D5DB] transition-colors duration-300 shadow-sm rounded-lg px-5 py-2 text-sm font-medium flex items-center gap-2"
+          >
+            <X className="w-4 h-4" />
+            Clear All
+          </Button>
+          <ExportOptions description={description} />
+        </div>
         <Button
-          variant="default"
-          onClick={onGenerateDescription}
-          className="bg-[#2563EB] hover:bg-[#1E40AF] text-white font-semibold tracking-wide px-6 py-2 text-base transition-all duration-300 shadow-md rounded-lg flex items-center gap-2"
+          variant="outline"
+          asChild
+          className="ml-auto"
         >
-          <FileText className="w-5 h-5" />
-          Generate Description
+          <Link to="/settings">
+            <Settings className="w-4 h-4 mr-2" />
+            Settings
+          </Link>
         </Button>
-        <Button
-          variant="secondary"
-          onClick={() => setIsEditOpen(true)}
-          className="bg-[#E5E7EB] text-[#374151] hover:bg-[#D1D5DB] transition-colors duration-300 shadow-sm rounded-lg px-5 py-2 text-sm font-medium flex items-center gap-2"
-        >
-          <Edit className="w-4 h-4" />
-          Edit Description
-        </Button>
-        <Button
-          variant="secondary"
-          onClick={onClearAll}
-          className="bg-[#E5E7EB] text-[#374151] hover:bg-[#D1D5DB] transition-colors duration-300 shadow-sm rounded-lg px-5 py-2 text-sm font-medium flex items-center gap-2"
-        >
-          <X className="w-4 h-4" />
-          Clear All
-        </Button>
-        <ExportOptions description={description} />
       </div>
 
       <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
