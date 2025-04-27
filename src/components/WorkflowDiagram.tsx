@@ -4,26 +4,34 @@ import { ArrowDown } from 'lucide-react';
 
 export default function WorkflowDiagram() {
   return (
-    <div className="max-w-4xl mx-auto my-12 px-4">
-      <h2 className="text-2xl font-bold text-center mb-8 text-slate-800">Kollect-It Workflow Diagram</h2>
+    <div className="max-w-4xl mx-auto my-12 px-4 font-['Inter']">
+      <h2 className="text-2xl font-bold text-center mb-12 text-slate-800">
+        Kollect-It Workflow Diagram
+      </h2>
       
-      <div className="flex flex-col items-center space-y-4">
+      <div className="flex flex-col items-center space-y-8">
         {steps.map((step, index) => (
           <React.Fragment key={index}>
-            <div className={`w-full max-w-md p-4 rounded-lg border-2 ${getStepColor(step.type)}`}>
-              <div className="flex items-start">
-                <span className="flex-shrink-0 w-8 h-8 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center font-bold mr-3">
-                  {index + 1}
-                </span>
-                <div>
-                  <h3 className="font-semibold text-lg">{step.title}</h3>
+            <div 
+              className={`w-full max-w-md p-6 rounded-lg shadow-sm transition-all duration-300 
+                ${getStepBackground(step.type)} hover:shadow-md`}
+            >
+              <div className="flex items-start gap-4">
+                <div className="flex-grow">
+                  <h3 className="font-bold text-lg text-center mb-3 text-slate-800">
+                    {step.title}
+                  </h3>
                   {step.description && (
-                    <p className="text-sm text-slate-600 mt-1">{step.description}</p>
+                    <p className="text-sm text-slate-600 text-center">
+                      {step.description}
+                    </p>
                   )}
                   {step.subItems && (
-                    <ul className="list-disc pl-5 mt-2 text-sm text-slate-600">
+                    <ul className="mt-4 space-y-2 text-sm text-slate-600">
                       {step.subItems.map((item, i) => (
-                        <li key={i}>{item}</li>
+                        <li key={i} className="flex items-center justify-center">
+                          <span className="block text-center">{item}</span>
+                        </li>
                       ))}
                     </ul>
                   )}
@@ -32,7 +40,7 @@ export default function WorkflowDiagram() {
             </div>
             
             {index < steps.length - 1 && (
-              <ArrowDown className="w-6 h-6 text-slate-400" />
+              <ArrowDown className="w-5 h-5 text-blue-400" />
             )}
           </React.Fragment>
         ))}
@@ -41,20 +49,20 @@ export default function WorkflowDiagram() {
   );
 }
 
-const getStepColor = (type: string): string => {
+const getStepBackground = (type: string): string => {
   switch (type) {
     case 'input':
-      return 'border-blue-300 bg-blue-50';
+      return 'bg-blue-50 border-2 border-blue-200';
     case 'process':
-      return 'border-purple-300 bg-purple-50';
+      return 'bg-blue-100 border-2 border-blue-300';
     case 'review':
-      return 'border-amber-300 bg-amber-50';
+      return 'bg-blue-50 border-2 border-blue-200';
     case 'output':
-      return 'border-green-300 bg-green-50';
+      return 'bg-blue-100 border-2 border-blue-300';
     case 'analytics':
-      return 'border-indigo-300 bg-indigo-50';
+      return 'bg-blue-50 border-2 border-blue-200';
     default:
-      return 'border-gray-300 bg-gray-50';
+      return 'bg-slate-50 border-2 border-slate-200';
   }
 };
 
@@ -75,7 +83,7 @@ const steps = [
     type: "process"
   },
   {
-    title: "Display Review Modal (Editable Fields)",
+    title: "Display Review Modal",
     description: "User reviews AI-generated description with ability to edit each section",
     type: "review"
   },
@@ -91,7 +99,7 @@ const steps = [
   },
   {
     title: "Display Final Enhanced Description",
-    description: "Side-by-side view of original and enhanced descriptions for comparison",
+    description: "Side-by-side view of original and enhanced descriptions",
     type: "review"
   },
   {
@@ -105,13 +113,13 @@ const steps = [
     ]
   },
   {
-    title: "Optional: WordPress API Upload",
+    title: "WordPress API Upload",
     description: "Direct integration with WordPress for product publishing",
     type: "output"
   },
   {
-    title: "Save Analytics Data",
-    description: "System records usage metrics for reporting",
+    title: "Analytics Data",
+    description: "System records usage metrics",
     type: "analytics",
     subItems: [
       "Number of Descriptions Generated",
