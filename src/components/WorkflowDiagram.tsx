@@ -1,20 +1,19 @@
-
 import * as React from 'react';
 import { ArrowDown } from 'lucide-react';
 
 export default function WorkflowDiagram() {
   return (
-    <div className="max-w-4xl mx-auto my-12 px-4 font-['Inter']">
+    <div className="max-w-4xl mx-auto my-12 px-4 font-['Inter'] bg-white">
       <h2 className="text-2xl font-bold text-center mb-12 text-slate-800">
         Kollect-It Workflow Diagram
       </h2>
       
-      <div className="flex flex-col items-center space-y-8">
+      <div className="flex flex-col items-center space-y-6">
         {steps.map((step, index) => (
           <React.Fragment key={index}>
             <div 
-              className={`w-full max-w-md p-6 rounded-lg shadow-sm transition-all duration-300 
-                ${getStepBackground(step.type)} hover:shadow-md`}
+              className={`w-full max-w-md p-6 rounded-lg border-2 transition-all duration-300 
+                ${getStepBackground(step.type)}`}
             >
               <div className="flex items-start gap-4">
                 <div className="flex-grow">
@@ -22,7 +21,7 @@ export default function WorkflowDiagram() {
                     {step.title}
                   </h3>
                   {step.description && (
-                    <p className="text-sm text-slate-600 text-center">
+                    <p className="text-sm text-slate-600 text-center leading-relaxed">
                       {step.description}
                     </p>
                   )}
@@ -40,7 +39,7 @@ export default function WorkflowDiagram() {
             </div>
             
             {index < steps.length - 1 && (
-              <ArrowDown className="w-5 h-5 text-blue-400" />
+              <div className="h-6 w-px bg-blue-300" />
             )}
           </React.Fragment>
         ))}
@@ -52,17 +51,17 @@ export default function WorkflowDiagram() {
 const getStepBackground = (type: string): string => {
   switch (type) {
     case 'input':
-      return 'bg-blue-50 border-2 border-blue-200';
+      return 'bg-white border-blue-200';
     case 'process':
-      return 'bg-blue-100 border-2 border-blue-300';
+      return 'bg-white border-blue-300';
     case 'review':
-      return 'bg-blue-50 border-2 border-blue-200';
+      return 'bg-white border-blue-200';
     case 'output':
-      return 'bg-blue-100 border-2 border-blue-300';
+      return 'bg-white border-blue-300';
     case 'analytics':
-      return 'bg-blue-50 border-2 border-blue-200';
+      return 'bg-white border-blue-200';
     default:
-      return 'bg-slate-50 border-2 border-slate-200';
+      return 'bg-white border-slate-200';
   }
 };
 
