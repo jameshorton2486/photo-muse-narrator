@@ -1,4 +1,3 @@
-
 export interface ProductDimensions {
   height: string;
   width: string;
@@ -14,6 +13,7 @@ export interface ProductFormData {
   era: string;
   price: string;
   itemNumber: string;
+  seoMetadata?: SeoMetadata;
 }
 
 export interface ImageMetadata {
@@ -25,4 +25,12 @@ export interface ImageMetadata {
 export interface DescriptionPayload {
   formData: ProductFormData;
   images: ImageMetadata[];
+}
+
+export interface SeoMetadata {
+  seoTitle: string;
+  metaDescription: string;
+  slug: string;
+  tags: string[];
+  imageAltTexts: { [imageUrl: string]: string };
 }

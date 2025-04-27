@@ -1,5 +1,5 @@
-
 import * as React from 'react';
+import type { SeoMetadata } from '@/types/product';
 import UploadZone from '@/components/UploadZone';
 import Toolbar from '@/components/Toolbar';
 import ReviewModal from '@/components/ReviewModal';
@@ -7,6 +7,7 @@ import ComparisonView from '@/components/ComparisonView';
 import WorkflowDiagram from '@/components/WorkflowDiagram';
 import { generateDescription } from '@/services/descriptionGenerator';
 import type { ProductDescription } from '@/services/descriptionGenerator';
+import SeoPreview from '@/components/SeoPreview';
 
 export default function Index() {
   const [isReviewOpen, setIsReviewOpen] = React.useState(false);
@@ -14,6 +15,7 @@ export default function Index() {
   const [description, setDescription] = React.useState<ProductDescription | null>(null);
   const [enhancedDescription, setEnhancedDescription] = React.useState<ProductDescription | null>(null);
   const [showDiagram, setShowDiagram] = React.useState(true);
+  const [seoMetadata, setSeoMetadata] = React.useState<SeoMetadata | null>(null);
 
   const handleClearAll = () => {
     setDescription(null);
@@ -23,7 +25,6 @@ export default function Index() {
   };
 
   const handleGenerateDescription = async () => {
-    // This will be replaced with real data from the form
     const mockPayload = {
       formData: {
         title: "Sample Product",
@@ -42,18 +43,16 @@ export default function Index() {
       images: []
     };
 
-    const generatedDescription = await generateDescription(mockPayload);
-    setDescription(generatedDescription);
+    const { description, seoMetadata } = await generateDescription(mockPayload);
+    setDescription(description);
+    setSeoMetadata(seoMetadata);
     setIsReviewOpen(true);
   };
 
   const handleEnhanceDescription = async () => {
-    // For now, we'll use a mock enhanced version
-    // This will be replaced with actual ChatGPT integration
     setIsReviewOpen(false);
     setIsComparisonOpen(true);
     
-    // Simulate API call delay
     setTimeout(() => {
       if (description) {
         setEnhancedDescription({
@@ -95,7 +94,10 @@ export default function Index() {
           </div>
         </div>
       ) : (
-        <UploadZone />
+        <div className="w-full max-w-4xl mx-auto space-y-8">
+          <UploadZone />
+          {seoMetadata && <SeoPreview metadata={seoMetadata} />}
+        </div>
       )}
 
       {description && (

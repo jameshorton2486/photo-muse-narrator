@@ -1,25 +1,5 @@
-import type { DescriptionPayload } from '@/types/product';
-
-export interface ProductDescription {
-  title: string;
-  details: {
-    category: string;
-    originPeriod: string;
-    age: string;
-    materials: string;
-    dimensions: string;
-    condition: string;
-    itemNumber: string;
-    price: string;
-  };
-  description: string[];
-  distinguishingCharacteristics: string[];
-  conditionReport: string;
-  provenanceHistory: string;
-  collectorValue: string;
-  additionalDetails: string;
-  shippingHandling: string;
-}
+import type { DescriptionPayload, ProductDescription, SeoMetadata } from '@/types/product';
+import { generateSeoMetadata } from './seoGenerator';
 
 interface ClaudeMessage {
   role: string;
@@ -102,14 +82,29 @@ async function callClaudeAPI(prompt: string, apiKey: string): Promise<any> {
   return JSON.parse(data.content[0].text);
 }
 
+export interface GeneratedContent {
+  description: ProductDescription;
+  seoMetadata: SeoMetadata;
+}
+
 export async function generateDescription(
   payload: DescriptionPayload, 
   apiKey?: string
-): Promise<ProductDescription> {
+): Promise<GeneratedContent> {
   if (!apiKey) {
     throw new Error('Claude API key is required');
   }
 
-  const prompt = await createClaudePrompt(payload);
-  return await callClaudeAPI(prompt, apiKey);
+  const [description, seoMetadata] = await Promise.all([
+    (async () => {
+      const prompt = await createClaudePrompt(payload);
+      return await callClaudeAPI(prompt, apiKey);
+    })(),
+    generateSeoMetadata(payload)
+  ]);
+
+  return {
+    description,
+    seoMetadata
+  };
 }
