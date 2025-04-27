@@ -1,6 +1,6 @@
 
 import * as React from 'react';
-import { FileText, Edit, X, Settings } from 'lucide-react';
+import { FileText, Edit, X, Settings, BarChart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
@@ -50,16 +50,26 @@ export default function Toolbar({ onClearAll, onGenerateDescription, description
           </Button>
           <ExportOptions description={description} />
         </div>
-        <Button
-          variant="outline"
-          asChild
-          className="ml-auto"
-        >
-          <Link to="/settings">
-            <Settings className="w-4 h-4 mr-2" />
-            Settings
-          </Link>
-        </Button>
+        <div className="flex gap-3">
+          <Button
+            variant="outline"
+            asChild
+          >
+            <Link to="/analytics">
+              <BarChart className="w-4 h-4 mr-2" />
+              Analytics
+            </Link>
+          </Button>
+          <Button
+            variant="outline"
+            asChild
+          >
+            <Link to="/settings">
+              <Settings className="w-4 h-4 mr-2" />
+              Settings
+            </Link>
+          </Button>
+        </div>
       </div>
 
       <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
