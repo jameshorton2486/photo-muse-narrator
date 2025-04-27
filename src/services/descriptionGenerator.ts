@@ -1,5 +1,32 @@
-import type { DescriptionPayload, ProductDescription, SeoMetadata } from '@/types/product';
-import { generateSeoMetadata } from './seoGenerator';
+import type { DescriptionPayload, SeoMetadata } from '@/types/product';
+
+interface ProductDetails {
+  category: string;
+  originPeriod: string;
+  age: string;
+  materials: string;
+  dimensions: string;
+  condition: string;
+  itemNumber: string;
+  price: string;
+}
+
+export interface ProductDescription {
+  title: string;
+  details: ProductDetails;
+  description: string[];
+  distinguishingCharacteristics: string[];
+  conditionReport: string;
+  provenanceHistory: string;
+  collectorValue: string;
+  additionalDetails: string;
+  shippingHandling: string;
+}
+
+export interface GeneratedContent {
+  description: ProductDescription;
+  seoMetadata: SeoMetadata;
+}
 
 interface ClaudeMessage {
   role: string;
@@ -80,23 +107,6 @@ async function callClaudeAPI(prompt: string, apiKey: string): Promise<any> {
 
   const data = await response.json();
   return JSON.parse(data.content[0].text);
-}
-
-export interface ProductDescription {
-  title: string;
-  details: ProductDetails;
-  description: string[];
-  distinguishingCharacteristics: string[];
-  conditionReport: string;
-  provenanceHistory: string;
-  collectorValue: string;
-  additionalDetails: string;
-  shippingHandling: string;
-}
-
-export interface GeneratedContent {
-  description: ProductDescription;
-  seoMetadata: SeoMetadata;
 }
 
 export async function generateDescription(

@@ -1,4 +1,3 @@
-
 import * as React from 'react';
 import type { SeoMetadata, ProductDescription } from '@/types/product';
 import UploadZone from '@/components/UploadZone';
@@ -51,8 +50,6 @@ export default function Index() {
       setIsReviewOpen(true);
     } catch (error) {
       console.error("Error generating description:", error);
-      // In a real app, we'd show an error toast here
-      // Using mock data instead for demo purposes
       const mockDescription: ProductDescription = {
         title: "Victorian Walnut Side Chair, Circa 1880",
         details: {

@@ -19,20 +19,18 @@ export default function Settings() {
   const form = useForm<SettingsFormValues>({
     defaultValues: {
       defaultTemplate: localStorage.getItem('defaultTemplate') || '',
-      csvFormat: localStorage.getItem('csvFormat') || 'title,description,price,sku,category',
+      csvFormat: localStorage.getItem('csvFormat') || 'sku,title,seoTitle,slug,metaDescription,tags,price,category,description,images,altText,shippingNotes',
     },
   });
 
   const onSubmit = (data: SettingsFormValues) => {
-    // Save settings to localStorage
     localStorage.setItem('defaultTemplate', data.defaultTemplate);
     localStorage.setItem('csvFormat', data.csvFormat);
 
     toast({
       title: "Settings saved",
-      description: "Your settings have been saved to browser storage.",
+      description: "Your settings have been saved successfully.",
     });
-    console.log('Settings saved:', data);
   };
 
   return (
@@ -42,7 +40,7 @@ export default function Settings() {
         <h1 className="text-2xl font-bold">Settings</h1>
       </div>
 
-      <div className="grid gap-6">
+      <div className="grid gap-6 max-w-2xl">
         <Card>
           <CardHeader>
             <CardTitle>Description Templates</CardTitle>
@@ -52,7 +50,7 @@ export default function Settings() {
           </CardHeader>
           <CardContent>
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                 <FormField
                   control={form.control}
                   name="defaultTemplate"
@@ -67,7 +65,7 @@ export default function Settings() {
                         />
                       </FormControl>
                       <FormDescription>
-                        Use {'{category}'}, {'{title}'}, etc. as placeholders
+                        Use placeholders like {'{title}'}, {'{category}'}, {'{materials}'}, {'{dimensions}'}, etc.
                       </FormDescription>
                     </FormItem>
                   )}
@@ -83,7 +81,7 @@ export default function Settings() {
                         <Input {...field} />
                       </FormControl>
                       <FormDescription>
-                        Comma-separated list of fields for CSV export
+                        Comma-separated list of fields for WooCommerce CSV export
                       </FormDescription>
                     </FormItem>
                   )}
