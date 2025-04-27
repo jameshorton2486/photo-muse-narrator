@@ -26,7 +26,7 @@ interface ClaudeMessage {
   content: string;
 }
 
-async function createClaudePrompt(payload: DescriptionPayload): string {
+async function createClaudePrompt(payload: DescriptionPayload): Promise<string> {
   const dimensions = `${payload.formData.dimensions.height}″ × ${payload.formData.dimensions.width}″ × ${payload.formData.dimensions.depth}″`;
   
   return `Create a detailed product description for an antique/collectible item with these specifications:

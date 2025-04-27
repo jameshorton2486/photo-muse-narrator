@@ -1,6 +1,6 @@
 
 import * as React from 'react';
-import { Edit, ChevronUp, ChevronDown } from 'lucide-react';
+import { ChevronDown, ChevronUp, Edit } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
