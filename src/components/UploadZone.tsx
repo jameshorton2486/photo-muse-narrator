@@ -85,15 +85,15 @@ const UploadZone = () => {
               </Button>
               <Button
                 variant="secondary"
-                size="default"
                 onClick={handleClearAll}
+                className="bg-[#E5E7EB] text-gray-800 hover:bg-[#D1D5DB] transition-colors duration-300 shadow-sm rounded-lg px-6 py-2 text-base"
               >
                 <X className="w-4 h-4 mr-2" />
                 Clear All
               </Button>
               <Button
                 variant="secondary"
-                size="default"
+                className="bg-[#E5E7EB] text-gray-800 hover:bg-[#D1D5DB] transition-colors duration-300 shadow-sm rounded-lg px-6 py-2 text-base"
               >
                 <Download className="w-4 h-4 mr-2" />
                 Export Data
