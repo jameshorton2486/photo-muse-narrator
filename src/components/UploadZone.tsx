@@ -1,9 +1,11 @@
+
 import * as React from 'react';
 import { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Upload } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { DescriptionPayload } from '@/types/product';
+import ProductDetailsForm from './ProductDetailsForm';
 
 interface UploadZoneProps {
   onImagesUploaded: (images: File[]) => void;

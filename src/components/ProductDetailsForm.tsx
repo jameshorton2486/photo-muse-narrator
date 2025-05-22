@@ -69,8 +69,8 @@ export default function ProductDetailsForm({ images, onGenerateDescription }: Pr
 
       onGenerateDescription(payload);
       
-      const description = await generateDescription(payload, apiKey);
-      setGeneratedDescription(description);
+      const generatedContent = await generateDescription(payload, apiKey);
+      setGeneratedDescription(generatedContent.description);
       
       toast({
         title: "Description generated successfully",
